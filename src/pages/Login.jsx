@@ -1,8 +1,12 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import styles from './Login.module.css';
 import { setAuthToken } from "../services/auth"; // 用於儲存 token
+import {
+  Button,
+  InputLabel,
+  TextField
+} from "@mui/material";
 
 function Login() {
   const [username, setUsername] = useState("");
@@ -18,44 +22,52 @@ function Login() {
       const response = await axios.post("http://127.0.0.1:8000/auth/login", {
         username,
         password,
-      },{ headers: { "Content-Type": "application/x-www-form-urlencoded" } }
-    );
+      }, { headers: { "Content-Type": "application/x-www-form-urlencoded" } },
+        { withCredentials: true }
+      );
 
-      // 假設 API 返回 token
-      setAuthToken(response.data.access_token); 
+      console.log(response.data)
+      // 假設 API 返回 token  
+      setAuthToken(response.data.access_token);
 
       // 登入成功後跳轉到 Dashboard
-      navigate("/dashboard");
+      navigate("/game");
     } catch (err) {
       setError("登入失敗，請檢查用戶名與密碼。");
     }
   };
 
   return (
-    <div className="login-container">
-      <h1>登入</h1>
-      <form onSubmit={handleSubmit}>
-        <div>
-          <label>用戶名：</label>
-          <input
-            type="text"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-            required
-          />
-        </div>
-        <div>
-          <label>密碼：</label>
-          <input
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
-        </div>
-        {error && <div className="error">{error}</div>}
-        <button type="submit">登入</button>
-      </form>
+    <div className="game-container">
+      <header className="header">登入</header>
+      <div className="content">
+        <form onSubmit={handleSubmit}>
+          <div>
+            <InputLabel>用戶名：</InputLabel>
+            <TextField
+              type="text"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              required
+            />
+          </div>
+          <div>
+            <InputLabel>密碼：</InputLabel>
+            <TextField
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+            />
+          </div>
+          {error && <div className="error">{error}</div>}
+          <Button
+            color="primary"
+            className="explore-button"
+            variant="contained"
+            type="submit">登入</Button>
+        </form>
+      </div>
     </div>
   );
 }
