@@ -19,10 +19,10 @@ function Login() {
     e.preventDefault();
 
     try {
-      const response = await axios.post("http://127.0.0.1:8000/auth/login", {
+      const response = await axios.post("http://127.0.0.1:8000/api/auth/login", {
         username,
         password,
-      }, { headers: { "Content-Type": "application/x-www-form-urlencoded" } },
+      }, { headers: { "Content-Type": "application/json"} },
         { withCredentials: true }
       );
 
