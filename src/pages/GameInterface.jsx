@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from "react";
 import {
   BottomNavigation,
-  BottomNavigationAction
+  BottomNavigationAction,
 } from "@mui/material";
-import { Person, Assignment, MoreHoriz, Settings, Explore } from "@mui/icons-material";
+import { Assignment, MoreHoriz, Settings, Explore, Group } from "@mui/icons-material";
 import { getAuthToken } from "../services/auth";
-import { useNavigate, Link, Outlet } from "react-router-dom";  // 用於路由切換
+import { useNavigate, Link, Outlet } from "react-router-dom";
+import GameContainer from "../components/GameContainer/GameContainer";
 
 
 const GameInterface = () => {
@@ -26,18 +27,18 @@ const GameInterface = () => {
       "/game/explore": "探索頁面",
       "/game/": "探索頁面",
       "/game/settings": "設定頁面",
+      "/game/character_list": "角色列表",
     };
 
     return pathTitles[location.pathname] || "遊戲主頁";
   };
 
   return (
-    <div className="game-container">
-      <header className="header">{getHeaderTitle()}</header> {/* 動態顯示標題 */}
+    <GameContainer>
+      <header className="header">{getHeaderTitle()}</header>
       <div className="content">
         <Outlet />
       </div>
-
       <BottomNavigation
         value={selectedTab}
         onChange={(event, newValue) => setSelectedTab(newValue)}
@@ -45,11 +46,11 @@ const GameInterface = () => {
         showLabels
       >
         <BottomNavigationAction
-          label="角色"
-          value="character"
-          icon={<Person />}
-          component={Link} // 用 Link 來實現路由切換
-          to="empty" // 定義路由
+          label="角色列表"
+          value="character_list"
+          icon={<Group />}
+          component={Link}
+          to="character_list"
         />
         <BottomNavigationAction
           label="任務"
@@ -80,7 +81,7 @@ const GameInterface = () => {
           to="settings" // 定義路由
         />
       </BottomNavigation>
-    </div>
+      </GameContainer>
   );
 };
 

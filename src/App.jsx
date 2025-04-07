@@ -5,6 +5,7 @@ import GameInterface from "./pages/GameInterface";
 import Settings from "./pages/Settings"
 import EmptyPage from "./pages/empty"
 import ExplorePage from "./pages/Explore"
+import CharacterListPage from "./pages/CharacterList"
 function App() {
   return (
     <BrowserRouter>
@@ -16,6 +17,7 @@ function App() {
           <Route path="settings" element={<Settings />} />
           <Route path="empty" element={<EmptyPage />} />
           <Route path="explore" element={<ExplorePage />} />
+          <Route path="character_list" element={<CharacterListPage />} />
         </Route>
       </Routes>
     </BrowserRouter>

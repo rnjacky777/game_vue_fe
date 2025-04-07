@@ -7,7 +7,8 @@ import {
   InputLabel,
   TextField
 } from "@mui/material";
-
+import GameContainer from "../components/GameContainer/GameContainer";
+import FormCard from "../components/FormCard/FormCard";
 function Login() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -38,10 +39,10 @@ function Login() {
   };
 
   return (
-    <div className="game-container">
+    <GameContainer>
       <header className="header">登入</header>
       <div className="content">
-        <form onSubmit={handleSubmit}>
+        <FormCard onSubmit={handleSubmit}>
           <div>
             <InputLabel>用戶名：</InputLabel>
             <TextField
@@ -66,9 +67,9 @@ function Login() {
             className="explore-button"
             variant="contained"
             type="submit">登入</Button>
-        </form>
+        </FormCard>
       </div>
-    </div>
+      </GameContainer>
   );
 }
 

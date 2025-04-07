@@ -50,31 +50,6 @@ h1 {
   line-height: 1.1;
 }
 
-/* 遊戲容器：模擬手機遊戲長形螢幕 */
-.game-container {
-  width: 100%;
-  max-width: 414px;
-  /* iPhone 12 Pro 最大寬度 */
-  height: 100vh;
-  background-color: #fff;
-  display: flex;
-  flex-direction: column;
-  border: 1px solid #ccc;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-  position: relative;
-}
-
-/* 表單樣式 */
-form {
-  width: 100%;
-  background-color: #ffffff;
-  border-radius: 8px;
-  padding: 20px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-}
 
 /* 頂部標題區 */
 .header {
@@ -96,20 +71,54 @@ form {
   overflow: hidden; /* 隱藏可能超出邊界的部分 */
 }
 
-/* 內容區域自動填滿 header 和 navbar 之間的高度 */
 .content {
-  height: calc(100vh - 60px - 56px);
-  /* 總高度 - header - navbar */
-  overflow-y: auto;
+  height: calc(100vh - 60px - 56px); /* 總高度 - header - navbar */
+  overflow-y: auto; /* 啟用垂直滾動 */
   padding: 16px;
   box-sizing: border-box;
   text-align: center;
   align-items: center;
   flex-direction: column;
-  /* flex: 1; */
   display: flex;
   justify-content: center;
 }
+.grid-container {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr); /* 每行 5 張卡片 */
+  gap: 16px; /* 卡片之間的間隙 */
+  width: 100%;
+  max-height: calc(100vh - 60px - 56px); /* 根據 header 和 navbar 的高度調整 */
+  overflow-y: auto; /* 確保縱向滾動 */
+  box-sizing: border-box;
+  padding: 16px;
+}
+
+.character-card {
+  background-color: lightgray;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 16px;
+  box-sizing: border-box;
+  height: 200px; /* 設定固定高度 */
+  text-align: center;
+  max-width: 100%; /* 保證卡片不超過容器的寬度 */
+  overflow: hidden; /* 防止內容超出卡片範圍 */
+}
+
+.card-title {
+  font-size: 18px;
+  font-weight: bold;
+  text-align: center; /* 置中對齊 */
+  word-wrap: break-word; /* 超過寬度換行 */
+  white-space: normal; /* 允許換行 */
+}
+
+.card-level {
+  font-size: 16px;
+  margin-top: 8px; /* 提升level與title之間的距離 */
+}
+
 /* 確保父容器的寬度不會超出螢幕 */
 .form-control {
   width: 100%;  /* 讓容器寬度跟螢幕寬度一致 */

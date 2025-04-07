@@ -1,0 +1,12 @@
+.gameContainer  {
+    width: 100%;
+    max-width: 414px;
+    /* iPhone 12 Pro 最大寬度 */
+    height: 100vh;
+    background-color: #fff;
+    display: flex;
+    flex-direction: column;
+    border: 1px solid #ccc;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    position: relative;
+  }
