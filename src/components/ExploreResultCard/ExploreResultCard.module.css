@@ -1,0 +1,8 @@
+.eventCard {
+    width: 100%;  /* 使卡片寬度為 100% */
+    max-width: 100vw;  /* 確保卡片不會超過螢幕寬度 */
+    margin: 0 auto;  /* 使卡片居中顯示 */
+    padding: 16px;
+    box-sizing: border-box; /* 確保 padding 不會影響寬度 */
+    overflow: hidden; /* 隱藏可能超出邊界的部分 */
+  }

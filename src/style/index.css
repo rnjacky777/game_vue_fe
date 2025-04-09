@@ -62,14 +62,6 @@ h1 {
   font-size: 20px;
   font-weight: bold;
 }
-.event-card {
-  width: 100%;  /* 使卡片寬度為 100% */
-  max-width: 100vw;  /* 確保卡片不會超過螢幕寬度 */
-  margin: 0 auto;  /* 使卡片居中顯示 */
-  padding: 16px;
-  box-sizing: border-box; /* 確保 padding 不會影響寬度 */
-  overflow: hidden; /* 隱藏可能超出邊界的部分 */
-}
 
 .content {
   height: calc(100vh - 60px - 56px); /* 總高度 - header - navbar */
@@ -82,42 +74,7 @@ h1 {
   display: flex;
   justify-content: center;
 }
-.grid-container {
-  display: grid;
-  grid-template-columns: repeat(5, 1fr); /* 每行 5 張卡片 */
-  gap: 16px; /* 卡片之間的間隙 */
-  width: 100%;
-  max-height: calc(100vh - 60px - 56px); /* 根據 header 和 navbar 的高度調整 */
-  overflow-y: auto; /* 確保縱向滾動 */
-  box-sizing: border-box;
-  padding: 16px;
-}
 
-.character-card {
-  background-color: lightgray;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  padding: 16px;
-  box-sizing: border-box;
-  height: 200px; /* 設定固定高度 */
-  text-align: center;
-  max-width: 100%; /* 保證卡片不超過容器的寬度 */
-  overflow: hidden; /* 防止內容超出卡片範圍 */
-}
-
-.card-title {
-  font-size: 18px;
-  font-weight: bold;
-  text-align: center; /* 置中對齊 */
-  word-wrap: break-word; /* 超過寬度換行 */
-  white-space: normal; /* 允許換行 */
-}
-
-.card-level {
-  font-size: 16px;
-  margin-top: 8px; /* 提升level與title之間的距離 */
-}
 
 /* 確保父容器的寬度不會超出螢幕 */
 .form-control {

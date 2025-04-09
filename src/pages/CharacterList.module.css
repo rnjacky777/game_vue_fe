@@ -1,0 +1,10 @@
+.gridContainer {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr); /* 每行 5 張卡片 */
+    gap: 7px; /* 卡片之間的間隙 */
+    width: 100%;
+    max-height: calc(100vh - 60px - 56px); /* 根據 header 和 navbar 的高度調整 */
+    overflow-y: auto ; /* 確保縱向滾動 */
+    box-sizing: border-box;
+    padding: 16px;
+  }

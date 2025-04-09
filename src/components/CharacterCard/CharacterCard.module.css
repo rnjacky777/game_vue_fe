@@ -1,32 +1,41 @@
 .cardWrapper {
     max-width: 100%;
-    overflow: hidden;
-}
-
-.card {
-    width: 100%;
-    /* 使卡片寬度為 100% */
+    /* overflow: hidden; */
+    display: flex; /* 使用 Flexbox */
+    justify-content: center; /* 水平居中 */
+    align-items: center; /* 垂直居中 */
+  }
+  
+  .card {
+    width: 80px !important;  /* 固定寬度 */
+    height: 150px !important;  /* 固定高度 */
     max-width: 100vw;
-    /* 確保卡片不會超過螢幕寬度 */
     margin: 0 auto;
-    /* 使卡片居中顯示 */
-    padding: 16px;
+    padding: 16px !important;
     box-sizing: border-box;
-    /* 確保 padding 不會影響寬度 */
     overflow: hidden;
-    /* 隱藏可能超出邊界的部分 */
-}
-
-.title {
-    font-size: 18px;
+    background-color: #8bb182ef !important;
+    display: flex;
+    flex-direction: column; /* 讓標題與等級呈垂直排列 */
+    justify-content: center; /* 垂直居中內容 */
+    align-items: center; /* 水平居中內容 */
+  }
+  
+  .content {
+    padding: 0 !important;
+    text-align: center; /* 使文字居中 */
+  }
+  
+  .title {
+    font-size: 15px !important;
     font-weight: bold;
-    text-align: center;
     word-wrap: break-word;
-    white-space: normal;
-}
-
-.level {
-    font-size: 16px;
-    margin-top: 8px;
-    text-align: center;
-}
+    white-space: normal; /* 允許文字換行 */
+  }
+  
+  .level {
+    font-size: 16px !important;
+    margin-top: 8px; /* 讓等級與名稱之間有些間距 */
+    white-space: normal; /* 允許文字換行 */
+  }
+  

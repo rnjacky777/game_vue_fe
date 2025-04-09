@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Card, CardContent, Typography, Grid2 } from "@mui/material"; // 使用 Grid
 import axios from "axios";
 import CharacterCard from "../components/CharacterCard/CharacterCard";
-
+import styles from "./CharacterList.module.css";
 function CharacterListPage() {
   const [characters, setCharacters] = useState([]);
 
@@ -20,7 +20,7 @@ function CharacterListPage() {
   }, []);
 
   return (
-    <div className="grid-container">
+    <div className={styles.gridContainer}>
       {characters.map((char) => (
         <CharacterCard key={char.id} name={char.name} level={char.level} />
       ))}
