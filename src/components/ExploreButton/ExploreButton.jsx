@@ -1,6 +1,6 @@
 import { Button } from "@mui/material";
 
-export default function ExploreButton({ onClick,disabled  }) {
+export default function ExploreButton({ onClick, disabled }) {
   return (
     <Button
       variant="contained"
@@ -10,10 +10,8 @@ export default function ExploreButton({ onClick,disabled  }) {
       sx={{
         width: 200,
         maxWidth: 240,
-        height: 64,
-        fontSize: "1.25rem",
-        padding: "12px 24px",
-        borderRadius: "12px",
+        height: 60,
+        fontSize: "1.2rem"
       }}
     >
       探索
