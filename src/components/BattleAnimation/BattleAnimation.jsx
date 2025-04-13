@@ -1,64 +1,90 @@
 import { useEffect, useState } from "react";
 import BattleRound from "../BattleRound/BattleRound";
-import BattleResultCard from "../BattleResultCard/BattleResultCard";
+import styles from "./BattleAnimation.module.css";
 
 export default function BattleAnimation({ data, onFinish }) {
+  const { battle, teams, result } = data;
+  const { rounds, rewards } = battle;
   const [currentRoundIndex, setCurrentRoundIndex] = useState(0);
-  const [currentActionIndex, setCurrentActionIndex] = useState(0);
-  const [isFinished, setIsFinished] = useState(false);
-  const [currentActions, setCurrentActions] = useState([]);
+  const [showResult, setShowResult] = useState(false);
 
   useEffect(() => {
-    if (!data || isFinished) return;
-
-    const currentRound = data.rounds[currentRoundIndex];
-    const actions = currentRound.actions;
-
-    if (currentActionIndex < actions.length) {
-      const timeout = setTimeout(() => {
-        setCurrentActions((prev) => [...prev, actions[currentActionIndex]]);
-        setCurrentActionIndex((prev) => prev + 1);
-      }, 1000);
-
-      return () => clearTimeout(timeout);
-    } else if (currentRoundIndex < data.rounds.length - 1) {
-      const timeout = setTimeout(() => {
+    if (currentRoundIndex < rounds.length) {
+      const timer = setTimeout(() => {
         setCurrentRoundIndex((prev) => prev + 1);
-        setCurrentActionIndex(0);
-        setCurrentActions([]);
-      }, 1500);
-
-      return () => clearTimeout(timeout);
+      }, 2000);
+      return () => clearTimeout(timer);
     } else {
-      const timeout = setTimeout(() => {
-        setIsFinished(true);
-      }, 1500);
-
-      return () => clearTimeout(timeout);
+      const resultTimer = setTimeout(() => {
+        setShowResult(true);
+        onFinish?.();
+      }, 1000);
+      return () => clearTimeout(resultTimer);
     }
-  }, [currentActionIndex, currentRoundIndex, data, isFinished]);
+  }, [currentRoundIndex, rounds.length, onFinish]);
 
-  const handleEnd = () => {
-    setIsFinished(false);
-    setCurrentRoundIndex(0);
-    setCurrentActionIndex(0);
-    setCurrentActions([]);
-    onFinish();
+  const renderTeamColumn = (team, isLeft) => {
+    const front = team.filter((u) => u.row === "front");
+    const back = team.filter((u) => u.row === "back");
+    const maxLen = Math.max(front.length, back.length);
+
+    return Array.from({ length: maxLen }).map((_, i) => (
+      <div key={i} className={styles.teamRow}>
+        {isLeft && (
+          <>
+            <div className={styles.character}>{renderCharacter(back[i])}</div>
+            <div className={styles.character}>{renderCharacter(front[i])}</div>
+          </>
+        )}
+        {!isLeft && (
+          <>
+            <div className={styles.character}>{renderCharacter(front[i])}</div>
+            <div className={styles.character}>{renderCharacter(back[i])}</div>
+          </>
+        )}
+      </div>
+    ));
+  };
+
+  const renderCharacter = (unit) => {
+    if (!unit) return <div className={styles.empty} />;
+    return (
+      <div className={styles.characterBox}>
+        <img src={unit.avatar} alt={unit.name} />
+        <div className={styles.name}>{unit.name}</div>
+        <div className={styles.hp}>
+          HP: {unit.hp}/{unit.max_hp}
+        </div>
+      </div>
+    );
   };
 
   return (
-    <div style={{ cursor: isFinished ? "pointer" : "default" }}>
-      {!isFinished ? (
-        <BattleRound
-          round={currentRoundIndex + 1}
-          actions={currentActions}
-        />
-      ) : (
-        <BattleResultCard
-          result={data.result}
-          rewards={data.rewards}
-          onClose={handleEnd}
-        />
+    <div className={styles.battleWrapper}>
+      <div className={styles.battleField}>
+        <div className={styles.teamLeft}>{renderTeamColumn(teams.A, true)}</div>
+        <div className={styles.vs}>VS</div>
+        <div className={styles.teamRight}>{renderTeamColumn(teams.B, false)}</div>
+      </div>
+
+      {currentRoundIndex < rounds.length && (
+        <BattleRound actions={rounds[currentRoundIndex].actions} />
+      )}
+
+      {showResult && (
+        <div className={styles.resultCard}>
+          <h3>{result}</h3>
+          <p>獲得金幣：{rewards.gold}</p>
+          <p>經驗值：{rewards.exp}</p>
+          <p>道具：</p>
+          <ul>
+            {rewards.items.map((item) => (
+              <li key={item.item_id}>
+                {item.name}（{item.rarity}）
+              </li>
+            ))}
+          </ul>
+        </div>
       )}
     </div>
   );

@@ -1,0 +1,34 @@
+.round {
+    margin-top: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  
+  .action {
+    padding: 0.5rem;
+    background-color: #222;
+    color: white;
+    border-radius: 8px;
+  }
+  
+  .actor {
+    font-weight: bold;
+  }
+  
+  .actionType {
+    color: #ffc107;
+  }
+  
+  .target {
+    margin-left: 0.5rem;
+  }
+  
+  .damage {
+    color: #ff4d4f;
+  }
+  
+  .buff {
+    color: #4caf50;
+  }
+  

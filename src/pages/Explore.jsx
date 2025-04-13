@@ -9,63 +9,129 @@ import BattleAnimation from "../components/BattleAnimation/BattleAnimation";
 const mockApiFetch = () => {
   return new Promise((resolve) => {
     setTimeout(() => {
-      const isBattle = Math.random() < 0.5;
+      const isBattle = Math.random() < 1.5;
       if (isBattle) {
         resolve({
-          type: "battle",
-          texts: ["你遇到一隻兇猛的怪物，準備戰鬥！"],
-          result: "你擊敗了怪物，獲得了寶藏！",
-          battle: {
-            result: "win",
-            rounds: [
+          "type": "battle",
+          "texts": [
+            "你走進古老神殿，一股黑氣撲面而來…",
+            "一隻魔化戰士出現在你面前，戰鬥開始！"
+          ],
+          "teams": {
+            "A": [
               {
-                round: 1,
-                actions: [
-                  {
-                    actor: "teamA_1",
-                    action_type: "attack",
-                    target: "teamB_1",
-                    damage: 120,
-                    crit: false,
-                    remaining_hp: 380,
-                  },
-                  {
-                    actor: "teamB_1",
-                    action_type: "skill",
-                    target: "teamA_1",
-                    damage: 150,
-                    crit: true,
-                    remaining_hp: 250,
-                  },
-                ],
+                "id": "hero_1",
+                "name": "劍士艾倫",
+                "hp": 500,
+                "max_hp": 500,
+                "avatar": "https://cdn-icons-png.flaticon.com/512/809/809957.png",
+                "row": "front"
               },
               {
-                round: 2,
-                actions: [
-                  {
-                    actor: "teamA_2",
-                    action_type: "buff",
-                    target: "teamA_all",
-                    buff: "attack_up",
-                    value: 20,
-                  },
-                  {
-                    actor: "teamB_2",
-                    action_type: "attack",
-                    target: "teamA_1",
-                    damage: 100,
-                    crit: false,
-                    remaining_hp: 150,
-                  },
-                ],
-              },
+                "id": "hero_2",
+                "name": "法師莉娜",
+                "hp": 400,
+                "max_hp": 400,
+                "avatar": "https://cdn-icons-png.flaticon.com/512/809/809957.png",
+                "row": "back"
+              }
             ],
-            rewards: {
-              gold: 200,
-              exp: 100,
-              items: [{ item_id: 1, name: "稀有劍", rarity: "rare" }],
-            },
-          },
+            "B": [
+              {
+                "id": "enemy_1",
+                "name": "魔化戰士",
+                "hp": 500,
+                "max_hp": 500,
+                "avatar": "https://cdn-icons-png.flaticon.com/512/809/809957.png",
+                "row": "front"
+              },
+              {
+                "id": "enemy_2",
+                "name": "魔化弓手",
+                "hp": 500,
+                "max_hp": 500,
+                "avatar": "https://cdn-icons-png.flaticon.com/512/809/809957.png",
+                "row": "back"
+              }
+            ]
+          }
+          ,
+          "result": "你成功擊敗魔化戰士，獲得了戰利品。",
+          "battle": {
+            "result": "win",
+            "rounds": [
+              {
+                "round": 1,
+                "actions": [
+                  {
+                    "actor": "hero_1",
+                    "actor_name": "劍士艾倫",
+                    "action_type": "attack",
+                    "target": "enemy_1",
+                    "target_name": "魔化戰士",
+                    "damage": 120,
+                    "crit": false,
+                    "remaining_hp": 380,
+                    "team": "A"
+                  },
+                  {
+                    "actor": "enemy_1",
+                    "actor_name": "魔化戰士",
+                    "action_type": "skill",
+                    "target": "hero_1",
+                    "target_name": "劍士艾倫",
+                    "damage": 150,
+                    "crit": true,
+                    "remaining_hp": 250,
+                    "team": "B"
+                  }
+                ]
+              },
+              {
+                "round": 2,
+                "actions": [
+                  {
+                    "actor": "hero_2",
+                    "actor_name": "法師莉娜",
+                    "action_type": "buff",
+                    "target": "hero_all",
+                    "buff": {
+                      "type": "attack_up",
+                      "value": 20,
+                      "duration": 3
+                    },
+                    "team": "A"
+                  },
+                  {
+                    "actor": "enemy_1",
+                    "actor_name": "魔化戰士",
+                    "action_type": "attack",
+                    "target": "hero_1",
+                    "damage": 100,
+                    "crit": false,
+                    "remaining_hp": 150,
+                    "team": "B"
+                  }
+                ]
+              }
+            ],
+            "rewards": {
+              "gold": 200,
+              "exp": 150,
+              "items": [
+                {
+                  "item_id": 101,
+                  "name": "神聖之劍",
+                  "rarity": "epic"
+                },
+                {
+                  "item_id": 202,
+                  "name": "治療藥水",
+                  "rarity": "common"
+                }
+              ]
+            }
+          }
         });
       } else {
         resolve({
@@ -159,11 +225,11 @@ export default function ExplorePage() {
             {/* 戰鬥動畫播放 */}
             {eventData.type === "battle" && showBattle && battleData && (
               <BattleAnimation
-                data={battleData}
+                data={eventData} // 傳整個事件
                 onFinish={() => {
                   setShowBattle(false);
-                  setShowResult(true); // 播完戰鬥動畫才顯示結果卡
-                  setBattleFinished(true); // 標記為戰鬥完成
+                  setShowResult(true);
+                  setBattleFinished(true);
                 }}
               />
             )}
