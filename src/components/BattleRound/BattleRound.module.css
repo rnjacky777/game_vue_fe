@@ -1,5 +1,5 @@
 .round {
-    margin-top: 1rem;
+    margin-top: 6rem;
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
@@ -10,6 +10,9 @@
     background-color: #222;
     color: white;
     border-radius: 8px;
+    word-wrap: break-word; /* 確保長文字換行 */
+    max-width: 100%; /* 限制最大寬度 */
+    box-sizing: border-box; /* 確保內邊距不會影響寬度計算 */
   }
   
   .actor {

@@ -24,6 +24,8 @@ const mockApiFetch = () => {
                 "name": "劍士艾倫",
                 "hp": 500,
                 "max_hp": 500,
+                "mp": 100,
+                "max_mp": 100,
                 "avatar": "https://cdn-icons-png.flaticon.com/512/809/809957.png",
                 "row": "front"
               },
@@ -32,6 +34,8 @@ const mockApiFetch = () => {
                 "name": "法師莉娜",
                 "hp": 400,
                 "max_hp": 400,
+                "mp": 120,
+                "max_mp": 120,
                 "avatar": "https://cdn-icons-png.flaticon.com/512/809/809957.png",
                 "row": "back"
               }
@@ -42,6 +46,8 @@ const mockApiFetch = () => {
                 "name": "魔化戰士",
                 "hp": 500,
                 "max_hp": 500,
+                "mp": 50,
+                "max_mp": 50,
                 "avatar": "https://cdn-icons-png.flaticon.com/512/809/809957.png",
                 "row": "front"
               },
@@ -50,12 +56,13 @@ const mockApiFetch = () => {
                 "name": "魔化弓手",
                 "hp": 500,
                 "max_hp": 500,
+                "mp": 60,
+                "max_mp": 60,
                 "avatar": "https://cdn-icons-png.flaticon.com/512/809/809957.png",
                 "row": "back"
               }
             ]
-          }
-          ,
+          },
           "result": "你成功擊敗魔化戰士，獲得了戰利品。",
           "battle": {
             "result": "win",
@@ -71,7 +78,9 @@ const mockApiFetch = () => {
                     "target_name": "魔化戰士",
                     "damage": 120,
                     "crit": false,
+                    "mp_used": 0,
                     "remaining_hp": 380,
+                    "remaining_mp": 100,
                     "team": "A"
                   },
                   {
@@ -82,7 +91,9 @@ const mockApiFetch = () => {
                     "target_name": "劍士艾倫",
                     "damage": 150,
                     "crit": true,
+                    "mp_used": 20,
                     "remaining_hp": 250,
+                    "remaining_mp": 30,
                     "team": "B"
                   }
                 ]
@@ -100,6 +111,9 @@ const mockApiFetch = () => {
                       "value": 20,
                       "duration": 3
                     },
+                    "mp_used": 30,
+                    "remaining_hp": 400,
+                    "remaining_mp": 90,
                     "team": "A"
                   },
                   {
@@ -109,7 +123,9 @@ const mockApiFetch = () => {
                     "target": "hero_1",
                     "damage": 100,
                     "crit": false,
+                    "mp_used": 0,
                     "remaining_hp": 150,
+                    "remaining_mp": 30,
                     "team": "B"
                   }
                 ]
@@ -132,7 +148,8 @@ const mockApiFetch = () => {
               ]
             }
           }
-        });
+        }
+        );
       } else {
         resolve({
           type: "normal",
@@ -149,17 +166,17 @@ const mockApiFetch = () => {
 };
 
 export default function ExplorePage() {
-  const [eventData, setEventData] = useState(null);       // 一般或戰鬥事件資料
-  const [battleData, setBattleData] = useState(null);     // 戰鬥資料
-  const [showBattle, setShowBattle] = useState(false);    // 是否顯示戰鬥動畫
-  const [isExploring, setIsExploring] = useState(false);  // 按鈕鎖定狀態
-  const [currentTextIndex, setCurrentTextIndex] = useState(0); // 目前顯示到第幾段文字
-  const [showResult, setShowResult] = useState(false);    // 是否顯示結果卡
-  const [battleFinished, setBattleFinished] = useState(false); // 戰鬥是否結束
+  const [eventData, setEventData] = useState(null);
+  const [battleData, setBattleData] = useState(null);
+  const [showBattle, setShowBattle] = useState(false);
+  const [isExploring, setIsExploring] = useState(false);
+  const [currentTextIndex, setCurrentTextIndex] = useState(0);
+  const [showResult, setShowResult] = useState(false);
+  const [battleFinished, setBattleFinished] = useState(false);
 
   const handleExplore = async () => {
     setIsExploring(true);
-    const mockEvent = await mockApiFetch();  // 模擬 API 資料
+    const mockEvent = await mockApiFetch();
     setEventData(mockEvent);
     setShowResult(false);
     setBattleFinished(false);
@@ -179,7 +196,7 @@ export default function ExplorePage() {
       if (currentTextIndex < eventData.texts.length - 1) {
         setCurrentTextIndex((prev) => prev + 1);
       } else if (!showResult) {
-        setShowResult(true); // 顯示結果卡
+        setShowResult(true);
       } else {
         resetState();
       }
@@ -199,33 +216,19 @@ export default function ExplorePage() {
   };
 
   return (
-    <ExploreLayout>
-      <Box
-        sx={{
-          flexGrow: 1,
-          width: "100%",
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          flexDirection: "column",
-          textAlign: "center",
-          px: 2,
-        }}
-        onClick={eventData ? handleScreenClick : undefined}
-      >
+    <>
+      <ExploreLayout onClick={eventData ? handleScreenClick : undefined}>
         {eventData && (
           <>
-            {/* 一般事件：文字逐段顯示 */}
             {eventData.type === "normal" && !showResult && (
               <Typography variant="body1" sx={{ fontSize: "1.2rem", p: 2 }}>
                 {eventData.texts[currentTextIndex]}
               </Typography>
             )}
 
-            {/* 戰鬥動畫播放 */}
             {eventData.type === "battle" && showBattle && battleData && (
               <BattleAnimation
-                data={eventData} // 傳整個事件
+                data={eventData}
                 onFinish={() => {
                   setShowBattle(false);
                   setShowResult(true);
@@ -236,17 +239,17 @@ export default function ExplorePage() {
           </>
         )}
 
-        {/* 顯示結果卡（一般事件或戰鬥事件） */}
         {((eventData?.type === "normal" && showResult) ||
           (eventData?.type === "battle" && showResult && battleFinished)) && (
-            <ExploreResultCard message={eventData.result || "戰鬥結束！你獲得了獎勳！"} />
-          )}
-      </Box>
+          <ExploreResultCard message={eventData.result || "戰鬥結束！你獲得了獎勳！"} />
+        )}
+      </ExploreLayout>
 
       <ExploreButton
         onClick={handleExplore}
         disabled={isExploring || !!eventData || showBattle}
       />
-    </ExploreLayout>
+    </>
   );
 }
+
