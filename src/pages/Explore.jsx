@@ -1,15 +1,20 @@
 import { useState } from "react";
-import { Box, Typography } from "@mui/material";
+import { Typography } from "@mui/material";
 import ExploreLayout from "../components/ExploreLayout/ExploreLayout";
 import ExploreButton from "../components/ExploreButton/ExploreButton";
 import ExploreResultCard from "../components/ExploreResultCard/ExploreResultCard";
 import BattleAnimation from "../components/BattleAnimation/BattleAnimation";
+import MapButton from "../components/MapButton"
+import MapModal from "./MapModal"
+import NpcButton from "../components/NpcButton"
+import NpcModal from "../components/NpcModal"
+
 
 // 假資料來源（建議可放在獨立檔案）
 const mockApiFetch = () => {
   return new Promise((resolve) => {
     setTimeout(() => {
-      const isBattle = Math.random() < 1.5;
+      const isBattle = Math.random() < 0.5;
       if (isBattle) {
         resolve({
           "type": "battle",
@@ -152,20 +157,34 @@ const mockApiFetch = () => {
         );
       } else {
         resolve({
-          type: "normal",
-          texts: [
+          "type": "normal",
+          "texts": [
             "你在森林中聽到奇怪的聲音...",
             "你靠近後發現是一隻受傷的小狐狸。",
             "牠似乎對你產生了信任。",
           ],
-          result: "你獲得了小狐狸的信任！",
+          "result": "你獲得了小狐狸的信任！",
         });
       }
     }, 500);
   });
 };
+const mockNpcEventFetch = async (npcId) => {
+  return {
+    type: "normal",
+    texts: [`你對 ${npcId} 打了聲招呼。`, `${npcId} 回應了你，並講了一段故事。`],
+    result: `${npcId} 贈送了你一個神秘道具。`,
+  };
+};
 
+const mockNpcList = [
+  { id: "npc_1", name: "艾莉絲" },
+  { id: "npc_2", name: "洛格" },
+  { id: "npc_3", name: "瑪莉亞" },
+];
 export default function ExplorePage() {
+  const [showMap, setShowMap] = useState(false);
+  const [currentMap, setCurrentMap] = useState("forest");
   const [eventData, setEventData] = useState(null);
   const [battleData, setBattleData] = useState(null);
   const [showBattle, setShowBattle] = useState(false);
@@ -173,6 +192,8 @@ export default function ExplorePage() {
   const [currentTextIndex, setCurrentTextIndex] = useState(0);
   const [showResult, setShowResult] = useState(false);
   const [battleFinished, setBattleFinished] = useState(false);
+  const [npcModalOpen, setNpcModalOpen] = useState(false);
+  const [npcList] = useState(mockNpcList);
 
   const handleExplore = async () => {
     setIsExploring(true);
@@ -187,6 +208,15 @@ export default function ExplorePage() {
     } else {
       setCurrentTextIndex(0);
     }
+  };
+
+  const handleNpcSelect = async (npc) => {
+    setNpcModalOpen(false);
+    const npcEvent = await mockNpcEventFetch(npc.name);
+    setEventData(npcEvent);
+    setShowResult(false);
+    setBattleFinished(false);
+    setCurrentTextIndex(0);
   };
 
   const handleScreenClick = () => {
@@ -218,6 +248,20 @@ export default function ExplorePage() {
   return (
     <>
       <ExploreLayout onClick={eventData ? handleScreenClick : undefined}>
+        <MapButton onClick={() => setShowMap(true)} />
+        <NpcButton onClick={() => setNpcModalOpen(true)} />
+
+        {showMap && (
+          <MapModal
+            currentMap={currentMap}
+            onClose={() => setShowMap(false)}
+            onSelectMap={(mapId) => {
+              setCurrentMap(mapId);
+              resetState();
+            }}
+          />
+        )}
+
         {eventData && (
           <>
             {eventData.type === "normal" && !showResult && (
@@ -249,7 +293,13 @@ export default function ExplorePage() {
         onClick={handleExplore}
         disabled={isExploring || !!eventData || showBattle}
       />
+
+      <NpcModal
+        open={npcModalOpen}
+        onClose={() => setNpcModalOpen(false)}
+        npcs={npcList}
+        onSelectNpc={handleNpcSelect}
+      />
     </>
   );
 }
-
