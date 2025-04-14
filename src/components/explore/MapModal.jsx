@@ -8,14 +8,14 @@ const mockMaps = [
   // 你之後可以改成從 props 或 API 拿資料
 ];
 
-export default function MapModal({ currentMap, onSelectMap, onClose }) {
+export default function MapModal({ open,currentMap, onSelectMap, onClose }) {
   return (
-    <Dialog open={true} onClose={onClose} fullWidth>
+    <Dialog open={open} onClose={onClose} fullWidth>
       <DialogTitle>選擇探索地點</DialogTitle>
       <DialogContent>
         <Grid2 container spacing={2} sx={{ mt: 1 }}>
           {mockMaps.map((map) => (
-            <Grid2 item xs={6} key={map.id}>
+            <Grid2 xs={6} key={map.id}>
               <Button
                 variant={map.id === currentMap ? "contained" : "outlined"}
                 fullWidth

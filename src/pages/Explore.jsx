@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Typography } from "@mui/material";
+import { Box, Typography } from "@mui/material";
 import ExploreLayout from "../components/explore/ExploreLayout/ExploreLayout";
 import ExploreButton from "../components/explore/ExploreButton/ExploreButton";
 import ExploreResultCard from "../components/explore/ExploreResultCard/ExploreResultCard";
@@ -8,6 +8,7 @@ import MapButton from "../components/explore/MapButton"
 import MapModal from "../components/explore/MapModal"
 import NpcButton from "../components/explore/NpcButton"
 import NpcModal from "../components/explore/NpcModal"
+import styles from "./Explore.module.css";
 
 
 // 假資料來源（建議可放在獨立檔案）
@@ -183,40 +184,36 @@ const mockNpcList = [
   { id: "npc_3", name: "瑪莉亞" },
 ];
 export default function ExplorePage() {
+  const [mode, setMode] = useState("idle");
   const [showMap, setShowMap] = useState(false);
   const [currentMap, setCurrentMap] = useState("forest");
   const [eventData, setEventData] = useState(null);
   const [battleData, setBattleData] = useState(null);
-  const [showBattle, setShowBattle] = useState(false);
-  const [isExploring, setIsExploring] = useState(false);
   const [currentTextIndex, setCurrentTextIndex] = useState(0);
-  const [showResult, setShowResult] = useState(false);
-  const [battleFinished, setBattleFinished] = useState(false);
   const [npcModalOpen, setNpcModalOpen] = useState(false);
   const [npcList] = useState(mockNpcList);
 
   const handleExplore = async () => {
-    setIsExploring(true);
+    setMode("exploring");
     const mockEvent = await mockApiFetch();
     setEventData(mockEvent);
-    setShowResult(false);
-    setBattleFinished(false);
+    setCurrentTextIndex(0);
 
     if (mockEvent.type === "battle") {
       setBattleData(mockEvent.battle);
-      setShowBattle(true);
+      setMode("battle");
     } else {
-      setCurrentTextIndex(0);
+      setMode("event");
     }
   };
 
   const handleNpcSelect = async (npc) => {
     setNpcModalOpen(false);
+    setMode("exploring");
     const npcEvent = await mockNpcEventFetch(npc.name);
     setEventData(npcEvent);
-    setShowResult(false);
-    setBattleFinished(false);
     setCurrentTextIndex(0);
+    setMode("event");
   };
 
   const handleScreenClick = () => {
@@ -225,73 +222,73 @@ export default function ExplorePage() {
     if (eventData.type === "normal") {
       if (currentTextIndex < eventData.texts.length - 1) {
         setCurrentTextIndex((prev) => prev + 1);
-      } else if (!showResult) {
-        setShowResult(true);
+      } else if (mode !== "result") {
+        setMode("result");
       } else {
         resetState();
       }
-    } else if (eventData.type === "battle" && showResult && battleFinished) {
+    } else if (eventData.type === "battle" && mode === "result") {
       resetState();
     }
   };
 
   const resetState = () => {
+    setMode("idle");
     setEventData(null);
     setBattleData(null);
-    setShowBattle(false);
-    setShowResult(false);
     setCurrentTextIndex(0);
-    setIsExploring(false);
-    setBattleFinished(false);
   };
+
+  const isBusy = mode !== "idle";
 
   return (
     <>
-      <ExploreLayout onClick={eventData ? handleScreenClick : undefined}>
-        <MapButton onClick={() => setShowMap(true)} />
-        <NpcButton onClick={() => setNpcModalOpen(true)} />
+      <ExploreLayout onClick={eventData ? handleScreenClick : undefined} className={styles.explorePage}>
+        {/* 頂部操作按鈕區域 */}
+        <Box className={styles.mapNpcButtonContainer}>
+          <MapButton onClick={() => !isBusy && setShowMap(true)} className={styles.mapNpcButton} />
+          <NpcButton onClick={() => !isBusy && setNpcModalOpen(true)} className={styles.mapNpcButton} />
+        </Box>
 
-        {showMap && (
-          <MapModal
-            currentMap={currentMap}
-            onClose={() => setShowMap(false)}
-            onSelectMap={(mapId) => {
-              setCurrentMap(mapId);
-              resetState();
-            }}
-          />
+        {/* 事件文字區塊 */}
+        {eventData?.type === "normal" && mode !== "result" && (
+          <Box className={styles.eventTextBox}>
+            <Typography variant="body1" sx={{ fontSize: "1.2rem", textAlign: "center" }}>
+              {eventData.texts[currentTextIndex]}
+            </Typography>
+          </Box>
         )}
 
-        {eventData && (
-          <>
-            {eventData.type === "normal" && !showResult && (
-              <Typography variant="body1" sx={{ fontSize: "1.2rem", p: 2 }}>
-                {eventData.texts[currentTextIndex]}
-              </Typography>
-            )}
-
-            {eventData.type === "battle" && showBattle && battleData && (
-              <BattleAnimation
-                data={eventData}
-                onFinish={() => {
-                  setShowBattle(false);
-                  setShowResult(true);
-                  setBattleFinished(true);
-                }}
-              />
-            )}
-          </>
+        {/* 戰鬥動畫顯示區塊 */}
+        {eventData?.type === "battle" && mode === "battle" && battleData && (
+          <Box className={styles.battleAnimationBox}>
+            <BattleAnimation data={eventData} onFinish={() => { setMode("result"); }} />
+          </Box>
         )}
 
-        {((eventData?.type === "normal" && showResult) ||
-          (eventData?.type === "battle" && showResult && battleFinished)) && (
-          <ExploreResultCard message={eventData.result || "戰鬥結束！你獲得了獎勳！"} />
+        {/* 結果卡片顯示 */}
+        {mode === "result" && eventData && (
+          <Box className={styles.resultCardBox}>
+            <ExploreResultCard message={eventData.result || "戰鬥結束！你獲得了獎勳！"} />
+          </Box>
         )}
+
+        {/* 探索按鈕 */}
+        <Box className={styles.exploreButtonContainer}>
+          <ExploreButton onClick={handleExplore} disabled={isBusy} />
+        </Box>
       </ExploreLayout>
 
-      <ExploreButton
-        onClick={handleExplore}
-        disabled={isExploring || !!eventData || showBattle}
+      {/* 地圖與 NPC 模態視窗 */}
+      <MapModal
+        open={showMap}
+        currentMap={currentMap}
+        onClose={() => setShowMap(false)}
+        onSelectMap={(mapId) => {
+          setCurrentMap(mapId);
+          resetState();
+          setShowMap(false);
+        }}
       />
 
       <NpcModal

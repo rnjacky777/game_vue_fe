@@ -1,12 +1,23 @@
-.gameContainer  {
-    width: 100%;
-    max-width: 414px;
-    /* iPhone 12 Pro 最大寬度 */
-    height: 100vh;
-    background-color: #fff;
-    display: flex;
-    flex-direction: column;
-    border: 1px solid #ccc;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-    position: relative;
-  }
+.gameContainer {
+  width: 100%;
+  max-width: 414px;
+  /* iPhone 12 Pro 最大寬度 */
+  height: 100vh;
+  background-color: #fff;
+  display: flex;
+  flex-direction: column;
+  border: 1px solid #ccc;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  position: relative;
+}
+
+.content {
+  height: calc(100vh - 128px);
+  /* 留出底部導航的空間 */
+  overflow-y: auto;
+  /* 開啟垂直捲動條 */
+  padding: 16px;
+  /* 適當的內邊距 */
+  box-sizing: border-box;
+  /* 確保邊距不會造成溢出 */
+}

@@ -8,9 +8,6 @@ export default function MapButton({ onClick }) {
       <IconButton
         onClick={onClick}
         sx={{
-          position: "absolute",
-          top: 80,
-          right: 16,
           backgroundColor: "white",
           "&:hover": {
             backgroundColor: "#f0f0f0",

@@ -6,7 +6,6 @@ export default function NpcButton({ onClick }) {
       variant="contained"
       color="secondary"
       onClick={onClick}
-      sx={{ position: "absolute", bottom: 150, right: 16 }}
     >
       與 NPC 對話
     </Button>
