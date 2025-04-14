@@ -7,8 +7,8 @@ import {
   InputLabel,
   TextField
 } from "@mui/material";
-import GameContainer from "../components/GameContainer/GameContainer";
-import FormCard from "../components/FormCard/FormCard";
+import GameContainer from "../components/common/GameContainer/GameContainer";
+import FormCard from "../components/common/FormCard/FormCard";
 function Login() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");

@@ -6,7 +6,7 @@ import {
 import { Assignment, MoreHoriz, Settings, Explore, Group } from "@mui/icons-material";
 import { getAuthToken } from "../services/auth";
 import { useNavigate, Link, Outlet } from "react-router-dom";
-import GameContainer from "../components/GameContainer/GameContainer";
+import GameContainer from "../components/common/GameContainer/GameContainer";
 
 
 const GameInterface = () => {

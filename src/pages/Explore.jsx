@@ -1,13 +1,13 @@
 import { useState } from "react";
 import { Typography } from "@mui/material";
-import ExploreLayout from "../components/ExploreLayout/ExploreLayout";
-import ExploreButton from "../components/ExploreButton/ExploreButton";
-import ExploreResultCard from "../components/ExploreResultCard/ExploreResultCard";
-import BattleAnimation from "../components/BattleAnimation/BattleAnimation";
-import MapButton from "../components/MapButton"
-import MapModal from "./MapModal"
-import NpcButton from "../components/NpcButton"
-import NpcModal from "../components/NpcModal"
+import ExploreLayout from "../components/explore/ExploreLayout/ExploreLayout";
+import ExploreButton from "../components/explore/ExploreButton/ExploreButton";
+import ExploreResultCard from "../components/explore/ExploreResultCard/ExploreResultCard";
+import BattleAnimation from "../components/battle/BattleAnimation/BattleAnimation";
+import MapButton from "../components/explore/MapButton"
+import MapModal from "../components/explore/MapModal"
+import NpcButton from "../components/explore/NpcButton"
+import NpcModal from "../components/explore/NpcModal"
 
 
 // 假資料來源（建議可放在獨立檔案）
