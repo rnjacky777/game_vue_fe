@@ -29,11 +29,12 @@ function Login() {
 
       console.log(response.data)
       // 假設 API 返回 token  
-      setAuthToken(response.data.access_token);
+      sessionStorage.setItem("token",response.data.access_token);
 
       // 登入成功後跳轉到 Dashboard
       navigate("/game");
     } catch (err) {
+      console.log(err)
       setError("登入失敗，請檢查用戶名與密碼。");
     }
   };

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import axios from "axios";
 import {
   BottomNavigation,
   BottomNavigationAction,
@@ -7,21 +8,37 @@ import { Assignment, MoreHoriz, Settings, Explore, Group } from "@mui/icons-mate
 import { getAuthToken } from "../services/auth";
 import { useNavigate, Link, Outlet } from "react-router-dom";
 import GameContainer from "../components/common/GameContainer/GameContainer";
-
-
+import { useUser } from "../context/UserContext";
 const GameInterface = () => {
   const [selectedTab, setSelectedTab] = useState("character");
-  const [user, setUser] = useState(null);
+  const { setUser } = useUser();
   const navigate = useNavigate();
 
   useEffect(() => {
-    const token = getAuthToken();
-    if (!token) navigate("/login");
-    else setUser({ username: "User123" });
+    const token = sessionStorage.getItem("token");
+    console.log(token)
+    if (!token) {
+      navigate("/login");
+    } else {
+      axios.get("http://127.0.0.1:8000/api/userinfo", {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      })
+      .then((res) => {
+        setUser(res.data); // 重新設回 user
+      })
+      .catch((err) => {
+        console.error(err)
+        sessionStorage.removeItem("token");
+        navigate("/login");
+      });
+    }
   }, [navigate]);
+  
 
-  if (!user) return <div>正在載入...</div>;
-
+  if (!useUser()) return <div>正在載入...</div>;
+  
   const getHeaderTitle = () => {
     const pathTitles = {
       "/game/explore": "探索頁面",
