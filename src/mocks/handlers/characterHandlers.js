@@ -1,13 +1,7 @@
 import { http, HttpResponse } from "msw";
 
-export const handlers = [
-  http.post("http://127.0.0.1:8000/api/auth/login", async ({ request }) => {
-    const { username, password } = await request.json();
-    if (username === "testuser" && password === "testpass") {
-      return HttpResponse.json({ access_token: "fake-jwt-token" }, { status: 200 });
-    }
-    return new HttpResponse("Invalid credentials", { status: 401 });
-  }),
+export const characterHandlers = [
+
   http.get("http://127.0.0.1:8000/api/character/list", async ({ request }) => {
     const characterData = [
       { id: "char_001", name: "Warrior", level: 10, class: "Fighter" },
@@ -200,11 +194,5 @@ export const handlers = [
       { status: 200 }
     );
   }),
-  http.get("http://127.0.0.1:8000/api/userinfo", async ({ request }) => {
-    const user_info = {
-      current_map_id: "cave",
-      user_id:"12345",
-    }
-    return HttpResponse.json(user_info, { status: 200 });
-  }),
+
 ];

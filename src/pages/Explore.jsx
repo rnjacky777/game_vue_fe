@@ -1,5 +1,6 @@
-import { useState,useEffect } from "react";
+import { useState, useEffect } from "react";
 import { Box, Typography } from "@mui/material";
+import axios from "axios";
 import ExploreLayout from "../components/explore/ExploreLayout/ExploreLayout";
 import ExploreButton from "../components/explore/ExploreButton/ExploreButton";
 import ExploreResultCard from "../components/explore/ExploreResultCard/ExploreResultCard";
@@ -25,11 +26,12 @@ const mockNpcList = [
   { id: "npc_2", name: "洛格" },
   { id: "npc_3", name: "瑪莉亞" },
 ];
+
 export default function ExplorePage() {
-  const { user, updateCurrentMap } = useUser();
+  const { user } = useUser();
   const [mode, setMode] = useState("idle");
+  const [maps, setMaps] = useState([]);
   const [showMap, setShowMap] = useState(false);
-  const [currentMap, setCurrentMap] = useState("forest");
   const [eventData, setEventData] = useState(null);
   const [battleData, setBattleData] = useState(null);
   const [currentTextIndex, setCurrentTextIndex] = useState(0);
@@ -40,14 +42,22 @@ export default function ExplorePage() {
   if (!user) {
     return <div>Loading...</div>; // Or handle loading/error in another way
   }
-
+  const loadMaps = async () => {
+    try {
+      const response = await axios.get("http://127.0.0.1:8000/api/map");
+      setMaps(response.data || []);
+    } catch (err) {
+      console.error("取得地圖資料失敗：", err);
+      setMaps([]);
+    }
+  };
   const handleExplore = async () => {
     if (!user) {
       console.error("尚未載入 user 資料，無法探索");
       return;
     }
     setMode("exploring");
-  
+
     try {
       const response = await fetch("http://127.0.0.1:8000/api/explore", {
         method: "POST",
@@ -59,15 +69,15 @@ export default function ExplorePage() {
           map_id: user.current_map_id,
         }),
       });
-  
+
       if (!response.ok) {
         throw new Error("探索事件 API 發生錯誤");
       }
-  
+
       const event = await response.json();
       setEventData(event);
       setCurrentTextIndex(0);
-  
+
       if (event.type === "battle") {
         setBattleData(event.battle);
         setMode("battle");
@@ -117,7 +127,14 @@ export default function ExplorePage() {
     <>
       <ExploreLayout onClick={eventData ? handleScreenClick : undefined} className={styles.explorePage}>
         <Box className={styles.mapNpcButtonContainer}>
-          <MapButton onClick={() => !isBusy && setShowMap(true)} className={styles.mapNpcButton} />
+          <MapButton
+            onClick={async () => {
+              if (isBusy) return;
+              await loadMaps();          // 先打 API
+              setShowMap(true);          // 再開 Modal
+            }}
+            className={styles.mapNpcButton}
+          />
           <NpcButton onClick={() => !isBusy && setNpcModalOpen(true)} className={styles.mapNpcButton} />
         </Box>
 
@@ -148,6 +165,7 @@ export default function ExplorePage() {
 
       <MapModal
         open={showMap}
+        maps={maps}  
         onClose={() => setShowMap(false)}
         onSelectMap={() => {
           resetState();

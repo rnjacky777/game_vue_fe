@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { Card, CardContent, Typography, Grid2 } from "@mui/material"; // 使用 Grid
 import axios from "axios";
 import CharacterCard from "../components/CharacterCard/CharacterCard";
 import styles from "./CharacterList.module.css";
