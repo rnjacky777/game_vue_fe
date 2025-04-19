@@ -1,0 +1,13 @@
+.gameInterfaceContent {
+    width: 100%;
+    height: 700px; /* 總高度 - header - navbar */
+    overflow-y: auto; /* 啟用垂直滾動 */
+    /* padding: 16px; */
+    box-sizing: border-box;
+    text-align: center;
+    align-items: flex-start;
+    flex-direction: column;
+    display: flex;
+    padding-top: 10px;
+    justify-content: flex-start;
+  }

@@ -8,6 +8,7 @@ import { Assignment, MoreHoriz, Settings, Explore, Group } from "@mui/icons-mate
 import { useNavigate, Link, Outlet } from "react-router-dom";
 import GameContainer from "../components/common/GameContainer/GameContainer";
 import { useUser } from "../context/UserContext";
+import styles from "./GameInterface.module.css";
 const GameInterface = () => {
   const [selectedTab, setSelectedTab] = useState("character");
   const { setUser } = useUser();
@@ -52,7 +53,7 @@ const GameInterface = () => {
   return (
     <GameContainer>
       <header className="header">{getHeaderTitle()}</header>
-      <div className="content">
+      <div className={styles.gameInterfaceContent}>
         <Outlet />
       </div>
       <BottomNavigation
