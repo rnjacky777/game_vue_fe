@@ -19,11 +19,18 @@ const routes: Array<RouteRecordRaw> = [
     // 只有在訪問該路由時才會被載入
     component: () => import('../pages/LoginPage.vue'),
   },
-  // {
-  //   path: '/register',
-  //   name: 'Register',
-  //   component: () => import('../pages/RegisterPage.vue'), // 假設您有一個 RegisterPage.vue
-  // },
+  {
+    path: '/register',
+    name: 'Register',
+    component: () => import('../pages/RegisterPage.vue'), // 假設您有一個 RegisterPage.vue
+  },
+  // 新增遊戲主頁面路由
+  {
+    path: '/game',
+    name: 'Game',
+    component: () => import('../pages/GamePage.vue'),
+    meta: { requiresAuth: true }, // 標記此路由需要驗證
+  },
 ];
 
 // 建立 router 實例
@@ -31,6 +38,25 @@ const router = createRouter({
   // 使用 HTML5 History 模式，讓網址看起來更簡潔 (例如 /login 而不是 /#/login)
   history: createWebHistory(),
   routes, // 傳入您定義的路由
+});
+
+// 新增導航守衛 (Navigation Guard)
+router.beforeEach((to, _from, next) => {
+  const isAuthenticated = !!sessionStorage.getItem('token');
+  const authRoutes = ['Login', 'Register'];
+
+  // 如果使用者已登入，但想去登入或註冊頁，直接導向遊戲主頁
+  if (authRoutes.includes(to.name as string) && isAuthenticated) {
+    next({ name: 'Game' });
+  }
+  // 檢查目標路由是否需要驗證
+  else if (to.meta.requiresAuth && !isAuthenticated) {
+    // 如果需要驗證但使用者未登入，則重定向到登入頁面
+    next({ name: 'Login' });
+  } else {
+    // 否則，允許導航
+    next();
+  }
 });
 
 export default router;
