@@ -1,8 +1,8 @@
 <template>
-  <div v-if="isLoading" class="loading-container">
+  <div v-if="userStore.isLoading" class="loading-container">
     正在載入...
   </div>
-  <GameContainer v-else>
+  <div v-else class="game-page-container">
     <header class="header">{{ headerTitle }}</header>
     <div class="game-interface-content">
       <router-view />
@@ -29,18 +29,16 @@
         <span class="label">設定</span>
       </router-link>
     </nav>
-  </GameContainer>
+  </div>
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, computed } from 'vue';
+import { onMounted, computed } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 import axios from 'axios';
-import GameContainer from '../components/common/GameContainer/GameContainer.vue';
-import { useUser } from '../context/UserContext'; // 假設您有一個 User composable
+import { useUserStore } from '../stores/user';
 
-const isLoading = ref(true);
-const { setUser } = useUser();
+const userStore = useUserStore();
 const router = useRouter();
 const route = useRoute();
 
@@ -67,12 +65,13 @@ onMounted(() => {
       }
     })
     .then((res) => {
-      setUser(res.data); // 重新設回 user
-      isLoading.value = false; // 載入完成
+      userStore.setUser(res.data); // 使用 store action
+      userStore.setLoading(false); // 使用 store action
     })
     .catch((err) => {
       console.error("獲取用戶資訊失敗:", err);
       sessionStorage.removeItem("token");
+      userStore.setLoading(false); // 確保錯誤時也更新載入狀態
       router.push("/login");
     });
   }
@@ -85,6 +84,14 @@ onMounted(() => {
   align-items: center;
   justify-content: center;
   height: 100vh;
+}
+
+.game-page-container {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  width: 100%;
+  background-color: #fdfdfd; /* 給頁面一個淺色背景 */
 }
 
 .header {
