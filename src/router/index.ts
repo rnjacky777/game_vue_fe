@@ -5,7 +5,7 @@ import CharacterListPage from '../pages/game/CharacterListPage.vue';
 import EmptyPage from '../pages/game/EmptyPage.vue';
 import ExplorePage from '../pages/game/ExplorePage.vue';
 import SettingsPage from '../pages/game/SettingsPage.vue';
-
+import UserInfoPage from '../pages/game/UserInfoPage.vue';
 // 定義您的路由
 // 這裡我們將根路徑 ('/') 指向 TitlePage 組件
 const routes: Array<RouteRecordRaw> = [
@@ -47,6 +47,10 @@ const routes: Array<RouteRecordRaw> = [
       {
         path: 'empty',
         component: EmptyPage,
+      },
+      {
+        path: 'userinfo',
+        component: UserInfoPage,
       },
       {
         path: 'explore',

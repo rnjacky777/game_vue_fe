@@ -20,9 +20,9 @@
         <span class="icon">🗺️</span>
         <span class="label">探險</span>
       </router-link>
-      <router-link to="/game/explore" class="nav-item">
-        <span class="icon">✨</span>
-        <span class="label">探險2</span>
+      <router-link to="/game/userinfo" class="nav-item">
+        <span class="icon">🙋‍♂️</span>
+        <span class="label">自己</span>
       </router-link>
       <router-link to="/game/settings" class="nav-item">
         <span class="icon">⚙️</span>
@@ -49,6 +49,7 @@ const headerTitle = computed(() => {
     "/game": "探索頁面",
     "/game/settings": "設定頁面",
     "/game/character_list": "角色列表",
+    "/game/userinfo": "用戶資訊",
   };
   return pathTitles[route.path] || "遊戲主頁";
 });
