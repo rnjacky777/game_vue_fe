@@ -17,13 +17,13 @@ const routes: Array<RouteRecordRaw> = [
     // 建議使用延遲載入 (lazy-loading) 來優化效能
     // 這會為此路由生成一個獨立的 chunk (login.[hash].js)
     // 只有在訪問該路由時才會被載入
-    component: () => import('../pages/LoginPage.vue'), // 假設您有一個 LoginPage.vue
+    component: () => import('../pages/LoginPage.vue'),
   },
-  {
-    path: '/register',
-    name: 'Register',
-    component: () => import('../pages/RegisterPage.vue'), // 假設您有一個 RegisterPage.vue
-  },
+  // {
+  //   path: '/register',
+  //   name: 'Register',
+  //   component: () => import('../pages/RegisterPage.vue'), // 假設您有一個 RegisterPage.vue
+  // },
 ];
 
 // 建立 router 實例
