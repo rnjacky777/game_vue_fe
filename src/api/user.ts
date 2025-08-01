@@ -1,37 +1,23 @@
 import api from '../services/axios';
-export interface CharacterTemplate {
-  id: number;
+
+// 根據新的 API 回應格式定義的角色介面
+export interface UserCharacter {
+  user_char_id: number;
+  char_temp_id: number;
   name: string;
-  rarity: number;
-  description: string;
-  base_hp: number;
-  base_mp: number;
-  base_atk: number;
-  base_spd: number;
-  base_def: number;
+  level: number;
+  position: number;
+  image_sm_url: string;
 }
 
-export interface Character {
-  id: number;
-  level: number;
-  exp: number;
-  hp: number;
-  mp: number;
-  atk: number;
-  spd: number;
-  def: number;
-  status_effects: Record<string, any>;
-  is_locked: boolean;
-  template: CharacterTemplate;
-}
 /**
  * 獲取登入使用者的所有角色
- * @returns Promise<Character[]> - 角色陣列的 Promise
+ * @returns Promise<UserCharacter[]> - 角色陣列的 Promise
  */
-export async function getAllCharacters(): Promise<Character[]> {
+export async function getAllCharacters(): Promise<UserCharacter[]> {
   try {
     // 使用 pre-configured axios instance，它會自動加上 Authorization header
-    const response = await api.get<Character[]>('/user/chars');
+    const response = await api.get<UserCharacter[]>('/user/chars');
     return response.data;
   } catch (error) {
     console.error('獲取角色列表失敗:', error);
@@ -40,3 +26,17 @@ export async function getAllCharacters(): Promise<Character[]> {
   }
 }
 
+/**
+ * 獲取登入使用者的隊伍
+ * @returns Promise<UserCharacter[]> - 隊伍角色陣列的 Promise
+ */
+export async function getUserTeams(): Promise<UserCharacter[]> {
+  try {
+    // 使用 pre-configured axios instance，它會自動加上 Authorization header
+    const response = await api.get<UserCharacter[]>('/user/teams');
+    return response.data;
+  } catch (error) {
+    console.error('獲取隊伍列表失敗:', error);
+    throw error;
+  }
+}

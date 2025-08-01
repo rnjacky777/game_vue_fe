@@ -1,47 +1,39 @@
 <template>
   <div class="character-list-container">
-    <div v-if="loading" class="loading">正在載入角色資料...</div>
-    <div v-else-if="error" class="error-message">
-      無法載入角色資料：{{ error.message }}
+    <div v-if="store.loading" class="loading">正在載入角色資料...</div>
+    <div v-else-if="store.error" class="error-message">
+      無法載入角色資料：{{ store.error.message }}
     </div>
-    <div v-else-if="characters.length === 0" class="no-characters">
+    <div v-else-if="store.characters.length === 0" class="no-characters">
       您尚未擁有任何角色。
     </div>
     <div v-else class="grid">
       <div
-        v-for="char in characters"
-        :key="char.id"
+        v-for="char in store.characters"
+        :key="char.user_char_id"
         class="character-card"
       >
         <img
-          src="https://api.dicebear.com/7.x/adventurer/svg?seed=Jacky"
+          :src="char.image_sm_url"
           alt="角色圖"
           class="character-image"
           loading="lazy"
         />
-        <!-- :src="char.template.image" will imprement in furture-->
-        <div class="character-name">{{ char.template.name }}</div>
+        <div class="character-name">{{ char.name }}</div>
       </div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue';
-import { getAllCharacters, type Character } from '../../api/user';
+import {onMounted } from 'vue';
+import { useCharacterStore } from '../../stores/characters';
 
-const characters = ref<Character[]>([]);
-const loading = ref(true);
-const error = ref<Error | null>(null);
+
+const store = useCharacterStore();
 
 onMounted(async () => {
-  try {
-    characters.value = await getAllCharacters();
-  } catch (err) {
-    error.value = err as Error;
-  } finally {
-    loading.value = false;
-  }
+  await store.fetchCharacters();
 });
 </script>
 
