@@ -40,3 +40,18 @@ export async function getUserTeams(): Promise<UserCharacter[]> {
     throw error;
   }
 }
+
+/**
+ * 更新使用者的隊伍
+ * @param char_ids - 角色 ID 陣列
+ * @returns Promise<UserCharacter[]> - 更新後隊伍角色陣列的 Promise
+ */
+export async function updateUserTeams(char_ids: number[]): Promise<UserCharacter[]> {
+  try {
+    const response = await api.post<UserCharacter[]>('/user/teams', { char_ids });
+    return response.data;
+  } catch (error) {
+    console.error('更新隊伍失敗:', error);
+    throw error;
+  }
+}
