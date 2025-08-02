@@ -77,30 +77,44 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref } from 'vue';
+import { onMounted, ref, watch } from 'vue';
 import { useCharacterStore } from '../../stores/characters';
 
 const store = useCharacterStore();
 
 const isEditMode = ref(false);
-const team = ref<string[]>([]);
+// 只儲存隊伍中角色的 ID
+const team = ref<number[]>([]);
 const saving = ref(false);
 
 onMounted(async () => {
-  await store.fetchCharacters();
-  // TODO: 初始可以從後端 GET /api/user/teams 塞入 team
-  // 例： team.value = fetched.slots.filter(Boolean) as string[];
+  // 元件掛載時，同時獲取角色與當前隊伍
+  await Promise.all([store.fetchCharacters(), store.fetchTeams()]);
 });
+
+// 監聽 store.teams 的變化，並同步到本地的 team 狀態
+// 這會在隊伍被獲取或更新後，自動更新本地隊伍
+watch(
+  () => store.teams,
+  (newTeams) => {
+    team.value = newTeams.map((c) => c.user_char_id);
+  },
+  { deep: true, immediate: true },
+);
 
 function toggleEditMode() {
   isEditMode.value = !isEditMode.value;
+  // 如果是取消編輯，則將隊伍重置回 store 中的狀態
+  if (!isEditMode.value) {
+    team.value = store.teams.map((c) => c.user_char_id);
+  }
 }
 
-function isInTeam(id: string) {
+function isInTeam(id: number) {
   return team.value.includes(id);
 }
 
-function onCharacterClick(id: string) {
+function onCharacterClick(id: number) {
   if (!isEditMode.value) return;
   if (isInTeam(id)) {
     removeFromTeam(id);
@@ -109,14 +123,14 @@ function onCharacterClick(id: string) {
   }
 }
 
-function addToTeam(id: string) {
+function addToTeam(id: number) {
   if (team.value.length >= 6) return;
   if (!isInTeam(id)) {
     team.value.push(id);
   }
 }
 
-function removeFromTeam(id: string) {
+function removeFromTeam(id: number) {
   team.value = team.value.filter((x) => x !== id);
 }
 
@@ -124,25 +138,22 @@ function clearTeam() {
   team.value = [];
 }
 
-function getCharacterName(id: string) {
+function getCharacterName(id: number) {
   const c = store.characters.find((c) => c.user_char_id === id);
-  return c ? c.name : '未知';
+  return c ? c.name : '未知角色';
 }
 
 async function saveTeam() {
   if (saving.value) return;
   saving.value = true;
   try {
-    // Placeholder: 換成你實際的 API 呼叫
-    // 例如 PUT /api/user/teams with { slots: [ ... ] }
-    const payload = {
-      slots: Array.from({ length: 6 }).map((_, i) => team.value[i] ?? null),
-    };
-    // await api.put('/api/user/teams', payload);
-    console.log('要送出的隊伍:', payload);
-    // TODO: 用回傳結果覆寫 team（防止後端 normalization 差異）
+    // 呼叫 store action 來更新隊伍
+    await store.updateTeams(team.value);
+    // watcher 會自動用 API 回應來更新本地的 `team` ref
+    isEditMode.value = false; // 成功後離開編輯模式
   } catch (e) {
     console.error('儲存隊伍失敗', e);
+    // 可選：向使用者顯示錯誤訊息
   } finally {
     saving.value = false;
   }
