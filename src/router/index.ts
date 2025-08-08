@@ -31,14 +31,14 @@ const routes: Array<RouteRecordRaw> = [
   },
   // 新增遊戲主頁面路由
   {
-    path: '/game',
+    path: '/main',
     name: 'Game',
     component: GamePage,
     meta: { requiresAuth: true }, // 標記此路由需要驗證
     children: [
       {
         path: '',
-        redirect: '/game/explore', // 預設子路由
+        redirect: '/main/explore', // 預設子路由
       },
       {
         path: 'character_list',
