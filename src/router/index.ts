@@ -1,11 +1,11 @@
 import { createRouter, createWebHistory, type RouteRecordRaw } from 'vue-router';
 import TitlePage from '../pages/TitlePage.vue';
 import GamePage from '../pages/GamePage.vue';
-import CharacterListPage from '../pages/game/CharacterListPage.vue';
-import EmptyPage from '../pages/game/EmptyPage.vue';
-import ExplorePage from '../pages/game/ExplorePage.vue';
-import SettingsPage from '../pages/game/SettingsPage.vue';
-import UserInfoPage from '../pages/game/UserInfoPage.vue';
+import CharacterListPage from '../pages/main/CharacterListPage.vue';
+import EmptyPage from '../pages/main/EmptyPage.vue';
+import ExplorePage from '../pages/main/ExplorePage.vue';
+import SettingsPage from '../pages/main/SettingsPage.vue';
+import UserInfoPage from '../pages/main/UserInfoPage.vue';
 // 定義您的路由
 // 這裡我們將根路徑 ('/') 指向 TitlePage 組件
 const routes: Array<RouteRecordRaw> = [
