@@ -8,23 +8,23 @@
       <router-view />
     </div>
     <nav class="navbar">
-      <router-link to="/game/character_list" class="nav-item">
+      <router-link to="/main/character_list" class="nav-item">
         <span class="icon">👥</span>
         <span class="label">角色列表</span>
       </router-link>
-      <router-link to="/game/empty" class="nav-item">
+      <router-link to="/main/empty" class="nav-item">
         <span class="icon">📝</span>
         <span class="label">任務</span>
       </router-link>
-      <router-link to="/game/explore" class="nav-item">
+      <router-link to="/main/explore" class="nav-item">
         <span class="icon">🗺️</span>
         <span class="label">探險</span>
       </router-link>
-      <router-link to="/game/userinfo" class="nav-item">
+      <router-link to="/main/userinfo" class="nav-item">
         <span class="icon">🙋‍♂️</span>
         <span class="label">自己</span>
       </router-link>
-      <router-link to="/game/settings" class="nav-item">
+      <router-link to="/main/settings" class="nav-item">
         <span class="icon">⚙️</span>
         <span class="label">設定</span>
       </router-link>
@@ -45,11 +45,11 @@ const route = useRoute();
 // 根據當前路由計算標題
 const headerTitle = computed(() => {
   const pathTitles: { [key: string]: string } = {
-    "/game/explore": "探索頁面",
-    "/game": "探索頁面",
-    "/game/settings": "設定頁面",
-    "/game/character_list": "角色列表",
-    "/game/userinfo": "用戶資訊",
+    "/main/explore": "探索頁面",
+    "/main": "探索頁面",
+    "/main/settings": "設定頁面",
+    "/main/character_list": "角色列表",
+    "/main/userinfo": "用戶資訊",
   };
   return pathTitles[route.path] || "遊戲主頁";
 });
