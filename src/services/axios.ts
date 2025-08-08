@@ -5,7 +5,7 @@ const api = axios.create({
   // 設置您的 API 基礎 URL
   // 例如：'http://localhost:3000/api'
   // 您可以將其存儲在 .env 文件中以獲得更好的靈活性
-  baseURL: import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000/api',
+  baseURL: import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000/api' || 'https://amon777.ddns.net/game',
   timeout: 5000, // 設置請求超時
   headers: {
     'Content-Type': 'application/json',

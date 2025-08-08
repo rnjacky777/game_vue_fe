@@ -1,0 +1,38 @@
+name: Deploy Game FE to GCP
+
+on:
+  # push:
+  #   branches:
+  #     - main  # or your deployment branch
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v3
+
+      - name: Setup Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20'
+
+      - name: Install Dependencies
+        run: npm install
+
+      - name: Build Project
+        run: npm run build
+
+      - name: Set up SSH
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/github-actions
+          chmod 600 ~/.ssh/github-actions
+          ssh-keyscan -H ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts
+
+      - name: Deploy to GCP VM
+        run: |
+          rsync -avz --delete -e "ssh -i ~/.ssh/github-actions -o StrictHostKeyChecking=no" dist/ ${{ secrets.GCP_USER }}@${{ secrets.SSH_HOST }}:/home/${{ secrets.GCP_USER }}/game_fe
+

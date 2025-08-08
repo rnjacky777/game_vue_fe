@@ -67,7 +67,7 @@ const routes: Array<RouteRecordRaw> = [
 // 建立 router 實例
 const router = createRouter({
   // 使用 HTML5 History 模式，讓網址看起來更簡潔 (例如 /login 而不是 /#/login)
-  history: createWebHistory(),
+  history: createWebHistory('/game/'),
   routes, // 傳入您定義的路由
 });
 
