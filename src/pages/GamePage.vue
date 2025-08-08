@@ -35,8 +35,8 @@
 <script setup lang="ts">
 import { onMounted, computed } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
-import axios from 'axios';
 import { useUserStore } from '../stores/user';
+import { fetchUserInfo } from '../api/user';
 
 const userStore = useUserStore();
 const router = useRouter();
@@ -55,26 +55,22 @@ const headerTitle = computed(() => {
 });
 
 // 元件掛載時檢查 token 並獲取用戶資訊
-onMounted(() => {
+onMounted(async () => {
   const token = sessionStorage.getItem("token");
   if (!token) {
     router.push("/login");
-  } else {
-    axios.get("https://amon777.ddns.net/game:8001/api/auth/userinfo", {
-      headers: {
-        Authorization: `Bearer ${token}`
-      }
-    })
-    .then((res) => {
-      userStore.setUser(res.data); // 使用 store action
-      userStore.setLoading(false); // 使用 store action
-    })
-    .catch((err) => {
-      console.error("獲取用戶資訊失敗:", err);
-      sessionStorage.removeItem("token");
-      userStore.setLoading(false); // 確保錯誤時也更新載入狀態
-      router.push("/login");
-    });
+    return;
+  }
+
+  try {
+    const userInfo = await fetchUserInfo();
+    userStore.setUser(userInfo); // 使用 store action
+  } catch (err) {
+    console.error("獲取用戶資訊失敗:", err);
+    sessionStorage.removeItem("token");
+    router.push("/login");
+  } finally {
+    userStore.setLoading(false); // 確保總是更新載入狀態
   }
 });
 </script>
