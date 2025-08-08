@@ -25,7 +25,7 @@ const handleSubmit = async () => {
     // 將 token 存儲在 sessionStorage
     sessionStorage.setItem('token', data.access_token);
     // 導航到遊戲頁面
-    router.push('/game');
+    router.push('/main');
   } catch (err) {
     console.error(err);
     error.value = '❌ 登入失敗，請檢查用戶名與密碼。';
