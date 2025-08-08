@@ -60,7 +60,7 @@ onMounted(() => {
   if (!token) {
     router.push("/login");
   } else {
-    axios.get("http://127.0.0.1:8000/api/auth/userinfo", {
+    axios.get("https://amon777.ddns.net/game:8001/api/auth/userinfo", {
       headers: {
         Authorization: `Bearer ${token}`
       }
